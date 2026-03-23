@@ -3,11 +3,29 @@ using Renodium.Api.Dtos;
 
 namespace Renodium.Api.Controllers {
     [ApiController]
-    [Route("[controller]/[action]")]
+    [Route("[controller]")]
     public class GamesController : ControllerBase
     {
         [HttpGet]
-        public List<GameDto> GetGames() {
+        public List<GameDto> GetGames() 
+        {
+            var result = GetGameList();
+            return result;
+        }
+
+        [HttpGet("{gameId}")]
+        public ActionResult<GameDto> GetGameById(int gameId)
+        {
+            var gameList = GetGameList();
+            var result = gameList.FirstOrDefault(g => g.Id == gameId);
+            if (result == null) {
+                return NotFound();
+            }
+            return result;
+        }
+
+        private List<GameDto> GetGameList() 
+        {
             GameDto firstGame = new GameDto
             {
                 Id = 1,
@@ -35,8 +53,17 @@ namespace Renodium.Api.Controllers {
                 Platform = "ps",
                 Details = "Split Fiction is a 2025 action-adventure game developed by Hazelight Studios and published by Electronic Arts. As a cooperative multiplayer-only game, it follows authors Mio Hudson and Zoe Foster after they become imprisoned in the world of their stories when they are connected to a machine designed to steal creative ideas.",
             };
-            var result = new List<GameDto>() { firstGame, secondGame, thirdGame };
-            return result;
+            GameDto fourthGame = new GameDto
+            {
+                Id = 4,
+                Title = "Cyberpunk 2077",
+                Price = 11999,
+                Image = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/header.jpg",
+                Platform = "pc",
+                Details = "Cyberpunk 2077 is an open-world action RPG set in Night City, where players take the role of V, a mercenary chasing fame, survival, and powerful cybernetic upgrades.",
+            };
+            var gameList = new List<GameDto>() { firstGame, secondGame, thirdGame, fourthGame };
+            return gameList;
         }
     }
 }

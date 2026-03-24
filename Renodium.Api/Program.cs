@@ -1,8 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using Renodium.Api.Data;
+using Renodium.Api.Interfaces;
+using Renodium.Api.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IGamesService, GamesService>();
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseNpgsql(connectionString);
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

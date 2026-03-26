@@ -6,5 +6,6 @@ namespace Renodium.Api.Interfaces
     {
         Task<List<GameDto>> GetGames();
         Task<GameDto?> GetGameById(int id);
+        Task<GameDto> CreateGame(CreateGameRequest createGameRequest);
     }
 }

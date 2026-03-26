@@ -30,5 +30,16 @@ namespace Renodium.Api.Controllers {
             }
             return result;
         }
+
+        [HttpPost]
+        public async Task<ActionResult<GameDto>> CreateGame(CreateGameRequest createGameRequest)
+        {
+            var result = await _gamesService.CreateGame(createGameRequest);
+            return CreatedAtAction(
+                nameof(GetGameById),
+                new { gameId = result.Id },
+                result
+            );
+        }
     }
 }

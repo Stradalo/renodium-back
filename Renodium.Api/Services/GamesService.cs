@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Renodium.Api.Data;
 using Renodium.Api.Dtos;
+using Renodium.Api.Entities;
 using Renodium.Api.Interfaces;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -45,6 +46,33 @@ namespace Renodium.Api.Services
                     Platform = g.Platform,
                 })
                 .FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<GameDto> CreateGame(CreateGameRequest request)
+        {
+            var newGame = new Game
+                {
+                    Title = request.Title,
+                    Price = request.Price,
+                    Details = request.Details,
+                    Image = request.Image,
+                    Platform = request.Platform,
+                };
+
+            _db.Games.Add(newGame);
+            await _db.SaveChangesAsync();
+
+            GameDto result = new GameDto
+            {
+                Id = newGame.Id,
+                Title = newGame.Title,
+                Price = newGame.Price,
+                Details = newGame.Details,
+                Image = newGame.Image,
+                Platform = newGame.Platform
+            };
+
             return result;
         }
     }

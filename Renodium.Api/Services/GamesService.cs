@@ -3,8 +3,6 @@ using Renodium.Api.Data;
 using Renodium.Api.Dtos;
 using Renodium.Api.Entities;
 using Renodium.Api.Interfaces;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Renodium.Api.Services
 {
@@ -15,9 +13,10 @@ namespace Renodium.Api.Services
             _db = db;
         }
 
-        public async Task<List<GameDto>> GetGames()
+        public async Task<List<GameDto>> GetGamesAsync()
         {
             List<GameDto> gameList = await _db.Games
+                .AsNoTracking()
                 .Select(g => new GameDto
                 {
                     Id = g.Id,
@@ -31,7 +30,7 @@ namespace Renodium.Api.Services
             return gameList;
         }
 
-        public async Task<GameDto?> GetGameById(int gameId) 
+        public async Task<GameDto?> GetGameByIdAsync(int gameId) 
         {
             GameDto? result = await _db.Games
                 .AsNoTracking()
@@ -49,7 +48,7 @@ namespace Renodium.Api.Services
             return result;
         }
 
-        public async Task<GameDto> CreateGame(CreateGameRequest request)
+        public async Task<GameDto> CreateGameAsync(CreateGameRequest request)
         {
             var newGame = new Game
                 {
@@ -74,6 +73,50 @@ namespace Renodium.Api.Services
             };
 
             return result;
+        }
+
+        public async Task<GameDto?> UpdateGameAsync(int gameId, UpdateGameRequest request)
+        { 
+            var game = await _db.Games.FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null)
+            {
+                return null;
+            }
+            
+            game.Title = request.Title;
+            game.Price = request.Price;
+            game.Details = request.Details;
+            game.Image = request.Image;
+            game.Platform = request.Platform;
+
+            await _db.SaveChangesAsync();
+
+            GameDto result = new GameDto
+            {
+                Id = game.Id,
+                Title = game.Title,
+                Price = game.Price,
+                Details = game.Details,
+                Image = game.Image,
+                Platform = game.Platform
+            };
+
+            return result;
+        }
+
+        public async Task<bool> DeleteGameAsync(int gameId)
+        {
+            var game = await _db.Games.FirstOrDefaultAsync(g => g.Id == gameId);
+            if (game == null)
+            {
+                return false;
+            }
+
+            _db.Games.Remove(game);
+            await _db.SaveChangesAsync();
+
+            return true;
         }
     }
 }

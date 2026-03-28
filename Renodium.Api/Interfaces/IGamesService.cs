@@ -4,8 +4,10 @@ namespace Renodium.Api.Interfaces
 {
     public interface IGamesService
     {
-        Task<List<GameDto>> GetGames();
-        Task<GameDto?> GetGameById(int id);
-        Task<GameDto> CreateGame(CreateGameRequest createGameRequest);
+        Task<List<GameDto>> GetGamesAsync();
+        Task<GameDto?> GetGameByIdAsync(int id);
+        Task<GameDto> CreateGameAsync(CreateGameRequest createGameRequest);
+        Task<GameDto?> UpdateGameAsync(int gameId, UpdateGameRequest updateGameRequest);
+        Task<bool> DeleteGameAsync(int gameId);
     }
 }

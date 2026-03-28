@@ -13,8 +13,8 @@ namespace Renodium.Api.Dtos
         public decimal Price { get; set; }
         [StringLength(2000)]
         public string? Image { get; set; }
-        [StringLength(100)]
         [Required]
+        [StringLength(100)]
         public string Platform { get; set; } = null!;
     }
 }

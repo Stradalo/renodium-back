@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Renodium.Api.Dtos;
 using Renodium.Api.Interfaces;
-using Renodium.Api.Services;
 
-namespace Renodium.Api.Controllers {
+namespace Renodium.Api.Controllers
+{
     [ApiController]
     [Route("[controller]")]
     public class GamesController : ControllerBase
@@ -15,7 +15,7 @@ namespace Renodium.Api.Controllers {
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GameDto>>> GetGames() 
+        public async Task<ActionResult<List<GameDto>>> GetGames()
         {
             var result = await _gamesService.GetGamesAsync();
             return Ok(result);
@@ -25,7 +25,8 @@ namespace Renodium.Api.Controllers {
         public async Task<ActionResult<GameDto>> GetGameById(int gameId)
         {
             var result = await _gamesService.GetGameByIdAsync(gameId);
-            if (result == null) {
+            if (result == null)
+            {
                 return NotFound();
             }
             return Ok(result);
@@ -44,7 +45,7 @@ namespace Renodium.Api.Controllers {
 
         [HttpPut("{gameId}")]
         public async Task<ActionResult<GameDto>> UpdateGame(int gameId, UpdateGameRequest updateGameRequest)
-        { 
+        {
             var result = await _gamesService.UpdateGameAsync(gameId, updateGameRequest);
             if (result == null)
             {

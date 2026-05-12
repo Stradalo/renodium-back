@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Renodium.Api.Entities
+﻿namespace Renodium.Api.Entities
 {
     public class Game
     {

@@ -9,7 +9,8 @@ namespace Renodium.Api.Services
     public class GamesService : IGamesService
     {
         private readonly AppDbContext _db;
-        public GamesService(AppDbContext db) { 
+        public GamesService(AppDbContext db)
+        {
             _db = db;
         }
 
@@ -30,7 +31,7 @@ namespace Renodium.Api.Services
             return gameList;
         }
 
-        public async Task<GameDto?> GetGameByIdAsync(int gameId) 
+        public async Task<GameDto?> GetGameByIdAsync(int gameId)
         {
             GameDto? result = await _db.Games
                 .AsNoTracking()
@@ -51,13 +52,13 @@ namespace Renodium.Api.Services
         public async Task<GameDto> CreateGameAsync(CreateGameRequest request)
         {
             var newGame = new Game
-                {
-                    Title = request.Title,
-                    Price = request.Price,
-                    Details = request.Details,
-                    Image = request.Image,
-                    Platform = request.Platform,
-                };
+            {
+                Title = request.Title,
+                Price = request.Price,
+                Details = request.Details,
+                Image = request.Image,
+                Platform = request.Platform,
+            };
 
             _db.Games.Add(newGame);
             await _db.SaveChangesAsync();
@@ -76,14 +77,14 @@ namespace Renodium.Api.Services
         }
 
         public async Task<GameDto?> UpdateGameAsync(int gameId, UpdateGameRequest request)
-        { 
+        {
             var game = await _db.Games.FirstOrDefaultAsync(g => g.Id == gameId);
 
             if (game == null)
             {
                 return null;
             }
-            
+
             game.Title = request.Title;
             game.Price = request.Price;
             game.Details = request.Details;

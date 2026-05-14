@@ -5,10 +5,15 @@ using Renodium.Api.Entities;
 using Renodium.Api.Interfaces;
 using Renodium.Api.Seeders;
 using Renodium.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+var jwtSection = builder.Configuration.GetSection("Jwt");
 
 // Add services to the container.
 
@@ -26,12 +31,32 @@ builder.Services.AddCors(options =>
     options.AddPolicy("FrontendDev", policy =>
     {
         policy.WithOrigins("http://localhost:5173")
+            .AllowCredentials()
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
 });
 builder.Services.AddIdentity<AppUser, AppRole>()
     .AddEntityFrameworkStores<AppDbContext>();
+
+var secretKey = jwtSection["SecretKey"];
+var issuer = jwtSection["Issuer"];
+var audience = jwtSection["Audience"];
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+            ValidateIssuer = true,
+            ValidIssuer = issuer,
+            ValidateAudience = true,
+            ValidAudience = audience,
+            ValidateLifetime = true,
+        };
+    });
 
 var app = builder.Build();
 

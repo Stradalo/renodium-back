@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Renodium.Api.Dtos;
 using Renodium.Api.Interfaces;
 
@@ -33,6 +34,7 @@ namespace Renodium.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<GameDto>> CreateGame(CreateGameRequest createGameRequest)
         {
             var result = await _gamesService.CreateGameAsync(createGameRequest);
@@ -44,6 +46,7 @@ namespace Renodium.Api.Controllers
         }
 
         [HttpPut("{gameId}")]
+        [Authorize]
         public async Task<ActionResult<GameDto>> UpdateGame(int gameId, UpdateGameRequest updateGameRequest)
         {
             var result = await _gamesService.UpdateGameAsync(gameId, updateGameRequest);
@@ -55,6 +58,7 @@ namespace Renodium.Api.Controllers
         }
 
         [HttpDelete("{gameId}")]
+        [Authorize]
         public async Task<ActionResult> DeleteGame(int gameId)
         {
             var result = await _gamesService.DeleteGameAsync(gameId);

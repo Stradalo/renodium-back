@@ -25,7 +25,7 @@ namespace Renodium.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Login(LoginRequest request)
+        public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         { 
             var user = await _userManager.FindByEmailAsync(request.Email);
 
@@ -80,10 +80,18 @@ namespace Renodium.Api.Controllers
 
             Response.Cookies.Append("token", tokenString, new CookieOptions
             {
+                SameSite = SameSiteMode.None,
+                Secure = true,
                 HttpOnly = true
             });
 
-            return Ok();
+            var response = new LoginResponse
+            {
+                Email = user.Email,
+                Role = firstRole,
+            };
+
+            return Ok(response);
         }
     }
 }

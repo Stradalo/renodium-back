@@ -60,6 +60,15 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = audience,
         ValidateLifetime = true,
     };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["token"];
+            return Task.CompletedTask;
+        }
+    };
 });
 
 var app = builder.Build();
